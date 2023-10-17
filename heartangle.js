@@ -6,7 +6,7 @@ var coordX = canvas.width / 2
 var coordY = canvas.height / 2
 var degree, rotate
 var targetX, targetY
-var count = 500
+var count = 300
 
 function drawHeart(){
     ctx.beginPath()
@@ -32,8 +32,8 @@ function drawLine1(setX){
 function drawLine2(PM){
     for(i = 0; i<=count; i++){
         degree = (i / count) * 180
-        rotate = (degree * Math.PI) / 180
-        targetX = PM * (Math.cos(rotate)+1) * 50 + coordX
+        rotate = (degree * Math.PI) / 360
+        targetX = PM * (Math.cos(rotate)) * 100 + coordX
         targetY = Math.sin(rotate) * 50 + coordY
 
         ctx.moveTo(coordX, coordY+(150/count*i))
