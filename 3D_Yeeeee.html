@@ -3,26 +3,31 @@
     <head>
         <title>하트를 그리는 나</title>
         <meta charset="utf-8">
-        <style>
-            #canvas{
-                border: 2px solid black;
-            }
-        </style>
-        
+        <link rel="stylesheet" href="style.css">
     </head>
     <body onload="drawHeart()">
-        <canvas id="canvas" width="800" height="600">
+        <h1>하트를 그린 나</h1><hr>
+        <div id="tool">
+            <div id="drawTool">
+                <canvas id="canvas" width="600" height="600"></canvas>
+            </div>
+            <div id="drawToolInspector">
+                <p>
+                    <label>이동&nbsp;&nbsp;&nbsp;X : </label><input type="text" id="inputTransX">
+                    <label>&nbsp;&nbsp;Y : </label><input type="text"  id="inputTransY">
+                </p>
+                <p>
+                    <label>크기&nbsp;&nbsp;&nbsp;X : </label><input type="text" id="inputScaleX">
+                    <label>&nbsp;&nbsp;Y : </label><input type="text" id="inputScaleY">
+                </p>
+                <p>
+                    <label>회전&nbsp;&nbsp;&nbsp;θ : </label><input type="text" id="inputRotate">
+                </p>
+            </div>
+        </div>
+        
 
-        </canvas>
-        <p>어거지로 하트를 만들어본 나</p>
-
-        <script type="text/javascript" src="heartangle.js" >
-            // var matrix = new Array(3)
-            // for(i = 0; i<matrix.length; i++){
-            //     matrix[i] = new Array(3);
-            // }
-
-            
-        </script>
+        <script type="text/javascript" src="heartangle.js" ></script>
+        <script type="text/javascript" src="data.js" ></script>
     </body>
 </html>
