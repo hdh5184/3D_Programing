@@ -15,24 +15,44 @@
             <div id="drawToolInspector">
                 <p>
                     <label>이동&nbsp;&nbsp;&nbsp;X : </label>
-                    <input type="text" id="inputTransX" value="0" onblur="hwTranslateMatrix()"
+                    <button onclick="buttonClickEvent('Trans', 'X', 1)">+</button>
+                    <input type="number" id="inputTransX" value="0"
+                    onblur="hwTranslateMatrix()"
+                    onwheel="hwTranslateMatrix(event,'X')"
                     onkeyup="if(window.event.keyCode==13){hwTranslateMatrix()}">
+                    <button onclick="buttonClickEvent('Trans', 'X', -1)">-</button>
                     <label>&nbsp;&nbsp;Y : </label>
-                    <input type="text" id="inputTransY" value="0" onblur="hwTranslateMatrix()"
+                    <button onclick="buttonClickEvent('Trans', 'Y', 1)">+</button>
+                    <input type="number" id="inputTransY" value="0"
+                    onblur="hwTranslateMatrix()"
+                    onwheel="hwTranslateMatrix(event,'Y')"
                     onkeyup="if(window.event.keyCode==13){hwTranslateMatrix()}">
+                    <button onclick="buttonClickEvent('Trans', 'Y', -1)">-</button>
                 </p>
                 <p>
                     <label>크기&nbsp;&nbsp;&nbsp;X : </label>
-                    <input type="text" id="inputScaleX" value="5" onblur="hwScaleMatrix()"
+                    <button onclick="buttonClickEvent('Scale', 'X', 1)">+</button>
+                    <input type="number" id="inputScaleX" value="5"
+                    onblur="hwScaleMatrix()"
+                    onwheel="hwScaleMatrix(event,'X')"
                     onkeyup="if(window.event.keyCode==13){hwScaleMatrix()}">
+                    <button onclick="buttonClickEvent('Scale', 'X', -1)">-</button>
                     <label>&nbsp;&nbsp;Y : </label>
-                    <input type="text" id="inputScaleY" value="5" onblur="hwScaleMatrix()"
+                    <button onclick="buttonClickEvent('Scale', 'Y', 1)">+</button>
+                    <input type="number" id="inputScaleY" value="5"
+                    onblur="hwScaleMatrix()"
+                    onwheel="hwScaleMatrix(event,'Y')"
                     onkeyup="if(window.event.keyCode==13){hwScaleMatrix()}">
+                    <button onclick="buttonClickEvent('Scale', 'Y', -1)">-</button>
                 </p>
                 <p>
                     <label>회전&nbsp;&nbsp;&nbsp;θ : </label>
-                    <input type="text" id="inputRotate" value="0" onblur="hwRotationMatrix()"
+                    <button onclick="buttonClickEvent('Rotate', '' , 1)">+</button>
+                    <input type="number" id="inputRotate" value="0"
+                    onblur="hwRotationMatrix()"
+                    onwheel="hwRotationMatrix(event)"
                     onkeyup="if(window.event.keyCode==13){hwRotationMatrix()}">
+                    <button onclick="buttonClickEvent('Rotate', '' , -1)">-</button>
                 </p>
             </div>
         </div>

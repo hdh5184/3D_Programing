@@ -19,7 +19,7 @@ var coordX = canvas.width / 2,  coordY = canvas.height / 2 // 하트의 중심 (
 
 
 // 하트 그리기 작업에 필요한 변수 선언
-var count = 1000                // 선 그리기 반봇 횟수
+var count = 800                // 선 그리기 반봇 횟수
 var sin, cos1, cos2, cos3, cos4 // 하트 모양을 만드는 데 필요한 sin, cos 모음
 var lenX, lenY                  // 하트를 그릴 각 좌표의 길이
 var targetX, targetY            // 하트 중심으로부터 선을 그릴 위치 지정
