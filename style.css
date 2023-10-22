@@ -9,6 +9,11 @@ input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
+#undo{
+    width: 100px;
+    height: 40px;
+}
+
 #tool{
     display: inline-block;
 }

@@ -41,3 +41,10 @@ let RMatrix = [[getCos, getSin * -1, 0], [getSin, getCos, 0],[0, 0, 1]]//회전 
 // 행렬 곱 수행
 let MultyMatrix = []    // 행렬 곱 행렬
 hwMatrixMultiply()      // 행렬 곱 수행
+
+
+// Undo, Redo에 이용할 행렬 모음
+let Undo = []
+let Confirm = ['type', 'X', 'Y']
+let historyNum = -1;
+let undoCheck = false

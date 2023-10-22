@@ -74,13 +74,14 @@ function hwMatrixMultiply(){
 function hwTranslateMatrix(event, trans){
     TransX = parseFloat(inputTransX.value)
     TransY = parseFloat(inputTransY.value)
-    
-    // 마우스 휠 작동 방향에 따른 input 값 보완
-    try {mouseWheelEvent(event, trans, "Trans")} catch (error) {}
-    
+
+    try {console.log(event.deltaY); mouseWheelEvent(event, trans, "Trans");}
+    catch (error) {CompareRange("Trans"); UndoSet("Trans"); console.log("222")}
+    finally {CompareRange("Trans")}
+
     CompareRange("Trans")
 
-    TMatrix[0][2] = TransX, TMatrix[1][2] = TransY
+    TMatrix[0][2] = TransX, TMatrix[1][2] = TransY * -1
     hwMatrixMultiply()
     drawHeart()
 }
@@ -90,10 +91,11 @@ function hwTranslateMatrix(event, trans){
 function hwScaleMatrix(event, trans){
     ScaleX = parseFloat(inputScaleX.value)
     ScaleY = parseFloat(inputScaleY.value)
-    
-    // 마우스 휠 작동 방향에 따른 input 값 보완
-    try {mouseWheelEvent(event, trans, "Scale")} catch (error) {}
-    
+
+    try {console.log(event.deltaY); mouseWheelEvent(event, trans, "Scale")}
+    catch (error) {CompareRange("Scale"); UndoSet("Scale")}
+    finally {CompareRange("Scale")}
+
     CompareRange("Scale")
 
     SMatrix[0][0] = ScaleX, SMatrix[1][1] = ScaleY
@@ -106,11 +108,10 @@ function hwScaleMatrix(event, trans){
 function hwRotationMatrix(event){
     degree = parseFloat(inputRotate.value)
 
-    // 마우스 휠 작동 방향에 따른 input 값 보완
-    try {if(event.deltaY < 0) degree += 1; else degree -= 1} catch (error) {}
-
-    CompareRange("Rotate")
-
+    try {if(event.deltaY < 0) degree += 1; else degree -= 1}
+    catch (error) {CompareRange("Rotate"); UndoSet("Rotate"); console.log("222")}
+    finally {CompareRange("Rotate")}
+    
     radian = (degree * Math.PI) / 180
     getSin = Math.sin(radian), getCos = Math.cos(radian)
 
@@ -121,7 +122,7 @@ function hwRotationMatrix(event){
 }
 
 
-//----------------------- 이벤트 모음 및 기타 함수-----------------------//
+//----------------------------기타 함수----------------------------//
 
 
 // 이동, 크기, 회전 범위 검증, 최대값 및 최소값 내 범위로 설정하는 함수
@@ -149,6 +150,93 @@ function CompareRange(c){
 }
 
 
+function ConfirmInspector(type){
+    switch (type) {
+        case "Trans":
+            Confirm = ["Trans", parseFloat(inputTransX.value), parseFloat(inputTransY.value)];
+            break;
+        case "Scale":
+            Confirm = ["Scale", parseFloat(inputScaleX.value), parseFloat(inputScaleY.value)];
+            break;
+        case "Rotate":
+            Confirm = ["Rotate", parseFloat(inputRotate.value), ''];
+            break;
+        default: break;
+    }
+    console.log(Confirm)
+}
+
+function UndoSet(type){
+    if(undoCheck) Undo.splice(historyNum + 1, Undo.length - historyNum); undoCheck = false
+
+    switch (type) {
+        case "Trans": 
+            console.log(Confirm), console.log(["Trans", TransX, TransY])
+            if(Confirm[0] != "Trans" || Confirm[1] != TransX || Confirm[2] != TransY){
+            Undo.push(Confirm)
+            //Confirm = ["Trans", TransX, TransY]
+            historyNum += 1
+            }
+            break;
+        case "Scale":
+            //console.log(Confirm), console.log(["Scale", ScaleX, ScaleY])
+            if(Confirm[0] != "Scale" || Confirm[1] != ScaleX || Confirm[2] != ScaleY){
+            Undo.push(Confirm)
+            //Confirm = ["Scale", ScaleX, ScaleY]
+            historyNum += 1
+            }
+            break;
+        case "Rotate": 
+            //console.log(Confirm), console.log(["Rotate", degree, ''])
+            if(Confirm[0] != "Rotate" || Confirm[1] != degree){
+            Undo.push(Confirm)
+            //Confirm = ["Rotate", degree, '']
+            historyNum += 1;
+            }
+            break;
+        default: break;
+    }
+    
+    console.log(Undo, historyNum)
+}
+
+function undo(){
+    console.log(Undo[historyNum])
+    if(historyNum < 0) return
+
+    switch (Undo[historyNum][0]) {
+        case "Trans":
+            inputTransX.value = Undo[historyNum][1]
+            inputTransY.value = Undo[historyNum][2]
+            TMatrix[0][2] = Undo[historyNum][1], TMatrix[1][2] = Undo[historyNum][2] * -1
+            hwMatrixMultiply(), drawHeart()
+            break;
+        case "Scale":
+            inputScaleX.value = Undo[historyNum][1]
+            inputScaleY.value = Undo[historyNum][2]
+            SMatrix[0][0] = Undo[historyNum][1], SMatrix[1][1] = Undo[historyNum][2]
+            hwMatrixMultiply(), drawHeart()
+            break;
+        case "Rotate":
+            inputRotate.value = Undo[historyNum][1]
+
+            radian = (Undo[historyNum][1] * Math.PI) / 180
+            getSin = Math.sin(radian), getCos = Math.cos(radian)
+        
+            RMatrix[0][0] = getCos, RMatrix[0][1] = getSin * -1
+            RMatrix[1][0] = getSin, RMatrix[1][1] = getCos
+            hwMatrixMultiply(), drawHeart()
+            break;
+        default:
+            break;
+    }
+    historyNum -= 1
+    undoCheck = true
+}
+
+//----------------------------이벤트 모음----------------------------//
+
+
 // 마우스 휠 작동 방향에 따른 input 값 보완하는 함수
 function mouseWheelEvent(event, trans, type){
     switch (type) {
@@ -167,7 +255,6 @@ function mouseWheelEvent(event, trans, type){
 
 
 function buttonClickEvent(type, trans, PM){
-    console.log("221")
     switch (type) {
         case "Trans":
             if(trans=='X') inputTransX.value = parseFloat(inputTransX.value) + PM

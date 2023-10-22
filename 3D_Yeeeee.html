@@ -17,6 +17,7 @@
                     <label>이동&nbsp;&nbsp;&nbsp;X : </label>
                     <button onclick="buttonClickEvent('Trans', 'X', 1)">+</button>
                     <input type="number" id="inputTransX" value="0"
+                    onfocus="ConfirmInspector('Trans')"
                     onblur="hwTranslateMatrix()"
                     onwheel="hwTranslateMatrix(event,'X')"
                     onkeyup="if(window.event.keyCode==13){hwTranslateMatrix()}">
@@ -24,6 +25,7 @@
                     <label>&nbsp;&nbsp;Y : </label>
                     <button onclick="buttonClickEvent('Trans', 'Y', 1)">+</button>
                     <input type="number" id="inputTransY" value="0"
+                    onfocus="ConfirmInspector('Trans')"
                     onblur="hwTranslateMatrix()"
                     onwheel="hwTranslateMatrix(event,'Y')"
                     onkeyup="if(window.event.keyCode==13){hwTranslateMatrix()}">
@@ -33,6 +35,7 @@
                     <label>크기&nbsp;&nbsp;&nbsp;X : </label>
                     <button onclick="buttonClickEvent('Scale', 'X', 1)">+</button>
                     <input type="number" id="inputScaleX" value="5"
+                    onfocus="ConfirmInspector('Scale')"
                     onblur="hwScaleMatrix()"
                     onwheel="hwScaleMatrix(event,'X')"
                     onkeyup="if(window.event.keyCode==13){hwScaleMatrix()}">
@@ -40,6 +43,7 @@
                     <label>&nbsp;&nbsp;Y : </label>
                     <button onclick="buttonClickEvent('Scale', 'Y', 1)">+</button>
                     <input type="number" id="inputScaleY" value="5"
+                    onfocus="ConfirmInspector('Scale')"
                     onblur="hwScaleMatrix()"
                     onwheel="hwScaleMatrix(event,'Y')"
                     onkeyup="if(window.event.keyCode==13){hwScaleMatrix()}">
@@ -49,11 +53,14 @@
                     <label>회전&nbsp;&nbsp;&nbsp;θ : </label>
                     <button onclick="buttonClickEvent('Rotate', '' , 1)">+</button>
                     <input type="number" id="inputRotate" value="0"
+                    onfocus="ConfirmInspector('Rotate')"
                     onblur="hwRotationMatrix()"
                     onwheel="hwRotationMatrix(event)"
                     onkeyup="if(window.event.keyCode==13){hwRotationMatrix()}">
                     <button onclick="buttonClickEvent('Rotate', '' , -1)">-</button>
                 </p>
+                <button id="undo" onclick="undo()">이전</button>
+                <p>엔터를 누르면 undo 배열에 추가되지 않는 문제 수정 필요</p>
             </div>
         </div>
         
