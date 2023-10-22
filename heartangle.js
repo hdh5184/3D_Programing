@@ -1,7 +1,10 @@
+// 행렬 곱, 벡터 변환 수행, 하트를 그리는 함수 모음
 
+//하트 그리기
 function drawHeart(){
-    coordX += MultyMatrix[0][2]
-    coordY += MultyMatrix[1][2]
+    ctx.clearRect(0, 0, canvas.width, canvas.height), ctx.beginPath()
+    coordX = canvas.width / 2 + MultyMatrix[0][2]
+    coordY = canvas.height / 2 + MultyMatrix[1][2]
     
     for (i = 0; i < count; i++) {
         degree = (i / count) * 360
@@ -16,15 +19,17 @@ function drawHeart(){
         lenX = (16 * sin ** 3)
         lenY = (13 * cos1 - 5 * cos2 - 2 * cos3 - cos4) * -1
         
-        targetX = MultyMatrix[0][0] * lenX + MultyMatrix[0][1] * lenY
-        targetY = MultyMatrix[1][0] * lenX + MultyMatrix[1][1] * lenY
+        targetX = MultyMatrix[0][0] * lenX + MultyMatrix[0][1] * lenY + coordX
+        targetY = MultyMatrix[1][0] * lenX + MultyMatrix[1][1] * lenY + coordY
     
         ctx.moveTo(coordX , coordY)
-        ctx.lineTo(targetX + coordX, targetY + coordY)
+        ctx.lineTo(targetX, targetY)
         ctx.stroke()
     }
 }
 
+
+//행렬 곱[MultyMatrix] = TMatrix * (RMatrix * SMatrix)
 function hwMatrixMultiply(){
     MultyMatrix = []
     var tempA = [], tempB = []
@@ -52,4 +57,38 @@ function hwMatrixMultiply(){
         }
         MultyMatrix.push(tempA)
     }
+}
+
+
+// drawToolInspector 내 속성 변경(벡터 변환) 시 수행하는 메서드 모음
+// 행렬 곱 수행 후 하트 그리기
+
+// 이동 변환
+function hwTranslateMatrix(){
+    TMatrix[0][2] = parseInt(inputTransX.value)
+    TMatrix[1][2] = parseInt(inputTransY.value)
+    hwMatrixMultiply()
+    drawHeart()
+}
+
+
+// 확대,축소 변환
+function hwScaleMatrix(){
+    SMatrix[0][0] = parseInt(inputScaleX.value)
+    SMatrix[1][1] = parseInt(inputScaleY.value)
+    hwMatrixMultiply()
+    drawHeart()
+}
+
+
+// 회전 변환
+function hwRotationMatrix(){
+    degree = parseInt(inputRotate.value)
+    radian = (degree * Math.PI) / 180
+    getSin = Math.sin(radian), getCos = Math.cos(radian)
+
+    RMatrix[0][0] = getCos, RMatrix[0][1] = getSin * -1
+    RMatrix[1][0] = getSin, RMatrix[1][1] = getCos
+    hwMatrixMultiply()
+    drawHeart()
 }

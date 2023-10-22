@@ -6,27 +6,37 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body onload="drawHeart()">
-        <h1>하트를 그린 나</h1><hr>
+        <h1>하트를 그린 나</h1>
+        <h3 style="text-align: right;">202027041 한동희</h3><hr>
         <div id="tool">
             <div id="drawTool">
                 <canvas id="canvas" width="600" height="600"></canvas>
             </div>
             <div id="drawToolInspector">
                 <p>
-                    <label>이동&nbsp;&nbsp;&nbsp;X : </label><input type="text" id="inputTransX">
-                    <label>&nbsp;&nbsp;Y : </label><input type="text"  id="inputTransY">
+                    <label>이동&nbsp;&nbsp;&nbsp;X : </label>
+                    <input type="text" id="inputTransX" value="0" onblur="hwTranslateMatrix()"
+                    onkeyup="if(window.event.keyCode==13){hwTranslateMatrix()}">
+                    <label>&nbsp;&nbsp;Y : </label>
+                    <input type="text" id="inputTransY" value="0" onblur="hwTranslateMatrix()"
+                    onkeyup="if(window.event.keyCode==13){hwTranslateMatrix()}">
                 </p>
                 <p>
-                    <label>크기&nbsp;&nbsp;&nbsp;X : </label><input type="text" id="inputScaleX">
-                    <label>&nbsp;&nbsp;Y : </label><input type="text" id="inputScaleY">
+                    <label>크기&nbsp;&nbsp;&nbsp;X : </label>
+                    <input type="text" id="inputScaleX" value="5" onblur="hwScaleMatrix()"
+                    onkeyup="if(window.event.keyCode==13){hwScaleMatrix()}">
+                    <label>&nbsp;&nbsp;Y : </label>
+                    <input type="text" id="inputScaleY" value="5" onblur="hwScaleMatrix()"
+                    onkeyup="if(window.event.keyCode==13){hwScaleMatrix()}">
                 </p>
                 <p>
-                    <label>회전&nbsp;&nbsp;&nbsp;θ : </label><input type="text" id="inputRotate">
+                    <label>회전&nbsp;&nbsp;&nbsp;θ : </label>
+                    <input type="text" id="inputRotate" value="0" onblur="hwRotationMatrix()"
+                    onkeyup="if(window.event.keyCode==13){hwRotationMatrix()}">
                 </p>
             </div>
         </div>
         
-
         <script type="text/javascript" src="heartangle.js" ></script>
         <script type="text/javascript" src="data.js" ></script>
     </body>
