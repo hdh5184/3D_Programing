@@ -11,7 +11,7 @@ function drawHeart(){
     coordY = canvas.height / 2 + MultyMatrix[1][2]
     
     for (i = 0; i < count; i++) {
-        degree = (i / count) * 360
+        var degree = (i / count) * 360
         radian = (degree * Math.PI) / 180
     
         sin = Math.sin(radian)
@@ -72,11 +72,18 @@ function hwMatrixMultiply(){
 
 // 이동 변환 함수
 function hwTranslateMatrix(event, trans){
+    console.log()
     TransX = parseFloat(inputTransX.value)
     TransY = parseFloat(inputTransY.value)
 
-    try {console.log(event.deltaY); mouseWheelEvent(event, trans, "Trans");}
-    catch (error) {CompareRange("Trans"); UndoSet("Trans"); console.log("222")}
+    try {console.log(event.deltaY);
+        mouseWheelEvent(event, trans, "Trans");
+    }
+    catch (error) {
+        CompareRange("Trans");
+        UndoSet("Trans");
+        //console.log("222")
+    }
     finally {CompareRange("Trans")}
 
     CompareRange("Trans")
@@ -107,6 +114,7 @@ function hwScaleMatrix(event, trans){
 // 회전 변환 함수
 function hwRotationMatrix(event){
     degree = parseFloat(inputRotate.value)
+    var str = "111";
 
     try {if(event.deltaY < 0) degree += 1; else degree -= 1}
     catch (error) {CompareRange("Rotate"); UndoSet("Rotate"); console.log("222")}
@@ -171,66 +179,89 @@ function UndoSet(type){
 
     switch (type) {
         case "Trans": 
-            console.log(Confirm), console.log(["Trans", TransX, TransY])
+            //console.log(Confirm), console.log(["Trans", TransX, TransY])
             if(Confirm[0] != "Trans" || Confirm[1] != TransX || Confirm[2] != TransY){
-            Undo.push(Confirm)
-            //Confirm = ["Trans", TransX, TransY]
+            Undo.push([Confirm[1], Confirm[2], ScaleX, ScaleY, degree])
+            Confirm = ["Trans", TransX, TransY]
             historyNum += 1
             }
             break;
         case "Scale":
             //console.log(Confirm), console.log(["Scale", ScaleX, ScaleY])
             if(Confirm[0] != "Scale" || Confirm[1] != ScaleX || Confirm[2] != ScaleY){
-            Undo.push(Confirm)
-            //Confirm = ["Scale", ScaleX, ScaleY]
+            Undo.push([TransX, TransY, Confirm[1], Confirm[2], degree])
+            Confirm = ["Scale", ScaleX, ScaleY]
             historyNum += 1
             }
             break;
         case "Rotate": 
             //console.log(Confirm), console.log(["Rotate", degree, ''])
             if(Confirm[0] != "Rotate" || Confirm[1] != degree){
-            Undo.push(Confirm)
-            //Confirm = ["Rotate", degree, '']
+            Undo.push([TransX, TransY, ScaleX, ScaleY, Confirm[1]])
+            Confirm = ["Rotate", degree, '']
             historyNum += 1;
             }
             break;
         default: break;
     }
     
-    console.log(Undo, historyNum)
+    console.log(Undo)
 }
 
 function undo(){
+    if(historyNum == Undo.length - 1)
+    Undo.push([TransX, TransY, ScaleX, ScaleY, degree])
+
     console.log(Undo[historyNum])
+    console.log(Undo)
     if(historyNum < 0) return
 
-    switch (Undo[historyNum][0]) {
-        case "Trans":
-            inputTransX.value = Undo[historyNum][1]
-            inputTransY.value = Undo[historyNum][2]
-            TMatrix[0][2] = Undo[historyNum][1], TMatrix[1][2] = Undo[historyNum][2] * -1
-            hwMatrixMultiply(), drawHeart()
-            break;
-        case "Scale":
-            inputScaleX.value = Undo[historyNum][1]
-            inputScaleY.value = Undo[historyNum][2]
-            SMatrix[0][0] = Undo[historyNum][1], SMatrix[1][1] = Undo[historyNum][2]
-            hwMatrixMultiply(), drawHeart()
-            break;
-        case "Rotate":
-            inputRotate.value = Undo[historyNum][1]
+    inputTransX.value = TransX = Undo[historyNum][0]
+    inputTransY.value = TransY = Undo[historyNum][1]
+    inputScaleX.value = ScaleX = Undo[historyNum][2]
+    inputScaleY.value = ScaleY = Undo[historyNum][3]
+    inputRotate.value = degree = Undo[historyNum][4]
 
-            radian = (Undo[historyNum][1] * Math.PI) / 180
-            getSin = Math.sin(radian), getCos = Math.cos(radian)
-        
-            RMatrix[0][0] = getCos, RMatrix[0][1] = getSin * -1
-            RMatrix[1][0] = getSin, RMatrix[1][1] = getCos
-            hwMatrixMultiply(), drawHeart()
-            break;
-        default:
-            break;
-    }
+    //console.log(TransX, TransY, ScaleX, ScaleY, degree)
+
+    TMatrix[0][2] = TransX, TMatrix[1][2] = TransY * -1
+    SMatrix[0][0] = ScaleX, SMatrix[1][1] = ScaleY
+    radian = (degree * Math.PI) / 180
+    getSin = Math.sin(radian), getCos = Math.cos(radian)
+    RMatrix[0][0] = getCos, RMatrix[0][1] = getSin * -1
+    RMatrix[1][0] = getSin, RMatrix[1][1] = getCos
+
+    hwMatrixMultiply(), drawHeart()
+
     historyNum -= 1
+    undoCheck = true
+    console.log(historyNum)
+}
+
+
+function redo(){
+    console.log(historyNum[0])
+    console.log(Undo[historyNum+2])
+    if(historyNum >= Undo.length - 2) return
+
+    inputTransX.value = TransX = Undo[historyNum+2][0]
+    inputTransY.value = TransY = Undo[historyNum+2][1]
+    inputScaleX.value = ScaleX = Undo[historyNum+2][2]
+    inputScaleY.value = ScaleY = Undo[historyNum+2][3]
+    inputRotate.value = degree = Undo[historyNum+2][4]
+
+    //console.log(TransX, TransY, ScaleX, ScaleY, degree)
+
+    TMatrix[0][2] = TransX, TMatrix[1][2] = TransY * -1
+    SMatrix[0][0] = ScaleX, SMatrix[1][1] = ScaleY
+    radian = (degree * Math.PI) / 180
+    getSin = Math.sin(radian), getCos = Math.cos(radian)
+    RMatrix[0][0] = getCos, RMatrix[0][1] = getSin * -1
+    RMatrix[1][0] = getSin, RMatrix[1][1] = getCos
+
+    hwMatrixMultiply(), drawHeart()
+
+    historyNum += 1
     undoCheck = true
 }
 
@@ -274,3 +305,6 @@ function buttonClickEvent(type, trans, PM){
             break;
     }
 }
+
+//Sapari는 숫자(e 포함)만 기입되는 'number' 타입의 input에 문자도 기입이 됨.
+//replace 사용하여 숫자만 추출
