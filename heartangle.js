@@ -37,8 +37,11 @@ function drawHeart(){
 
     }
 
-    console.log(ScaleX, ScaleY)
+    heartArea()
+}
 
+
+function heartArea(){
     degree = this.degree
     subSin = Math.sin((degree * Math.PI) / 180), subCos = Math.cos((degree * Math.PI) / 180)
     console.log(subSin, subCos)
@@ -55,36 +58,23 @@ function drawHeart(){
     var point4 = {
         x : (subCos * -ScaleX - subSin * -ScaleY) * 16 + coordX,
         y : (subSin * -ScaleX + subCos * -ScaleY) * 16 + coordY}
-
-    console.log(point1, point2, point3, point4)
     
-    ctx.strokeStyle = "black", ctx.beginPath()
+    ctx.strokeStyle = "gray", ctx.beginPath()
     ctx.moveTo(point1.x, point1.y), ctx.stroke()
     ctx.lineTo(point2.x, point2.y), ctx.stroke()
     ctx.lineTo(point3.x, point3.y), ctx.stroke()
     ctx.lineTo(point4.x, point4.y), ctx.stroke()
     ctx.lineTo(point1.x, point1.y), ctx.stroke()
 
-
-    
-
-    for (let i = 0; i < 100; i++) {
-        var degree = (i / 100) * 360
-        radian = (degree * Math.PI) / 180
-    
-        var sin = Math.sin(radian)
-        var cos = Math.cos(radian)
-        
-        targetX = (cos - sin) * 50 + 100
-        targetY = (sin + cos) * 50 + 100
-    
-        ctx.moveTo(100, 100)
-        ctx.lineTo(targetX, targetY)
-        ctx.stroke()
-    }
-
-    // console.log(cos, sin)
-
+    ctx.beginPath(), ctx.fillStyle = "white"
+    ctx.arc((point1.x + point2.x) / 2, (point1.y + point2.y) / 2, 5, 0, 2 * Math.PI)
+    ctx.stroke(), ctx.fill(), ctx.beginPath()
+    ctx.arc((point2.x + point3.x) / 2, (point2.y + point3.y) / 2, 5, 0, 2 * Math.PI)
+    ctx.stroke(), ctx.fill(), ctx.beginPath()
+    ctx.arc((point3.x + point4.x) / 2, (point3.y + point4.y) / 2, 5, 0, 2 * Math.PI)
+    ctx.stroke(), ctx.fill(), ctx.beginPath()
+    ctx.arc((point4.x + point1.x) / 2, (point4.y + point1.y) / 2, 5, 0, 2 * Math.PI)
+    ctx.stroke(), ctx.fill(), ctx.beginPath()
 }
 
 
