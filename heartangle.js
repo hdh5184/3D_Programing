@@ -6,13 +6,17 @@
 
 //하트 그리는 함수
 function drawHeart(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height), ctx.beginPath()
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.strokeStyle = "red", ctx.beginPath()
+
     coordX = canvas.width / 2 + MultyMatrix[0][2]
     coordY = canvas.height / 2 + MultyMatrix[1][2]
     
+    var localX1 = coordX, localX2 = coordX, localY1 = coordY, localY2 = coordY
+
     for (i = 0; i < count; i++) {
-        var degree = (i / count) * 360
-        radian = (degree * Math.PI) / 180
+        var deg = (i / count) * 360
+        radian = (deg * Math.PI) / 180
     
         sin = Math.sin(radian)
         cos1 = Math.cos(radian)
@@ -21,15 +25,67 @@ function drawHeart(){
         cos4 = Math.cos(radian * 4)
     
         lenX = (16 * sin ** 3)
-        lenY = (13 * cos1 - 5 * cos2 - 2 * cos3 - cos4) * -1
+        lenY = (((13 * cos1 - 5 * cos2 - 2 * cos3 - 1 * cos4) * -1) - 2.56 )* 1.105
         
         targetX = MultyMatrix[0][0] * lenX + MultyMatrix[0][1] * lenY + coordX
         targetY = MultyMatrix[1][0] * lenX + MultyMatrix[1][1] * lenY + coordY
     
-        ctx.moveTo(coordX , coordY)
+        ctx.moveTo(coordX, coordY)
+        ctx.lineTo(targetX, targetY)
+        ctx.stroke()
+
+    }
+    degree = this.degree
+    var point1 = {
+        x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
+        y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+
+    degree += 90
+    var point2 = {
+        x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
+        y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+
+    degree += 90    
+    var point3 = {
+        x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
+        y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+
+    degree += 90
+    var point4 = {
+        x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
+        y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+
+
+    console.log(cos, sin)
+
+    console.log(point1, point2, point3, point4)
+    
+    ctx.strokeStyle = "black", ctx.beginPath()
+    ctx.moveTo(point1.x, point1.y), ctx.stroke()
+    ctx.lineTo(point2.x, point2.y), ctx.stroke()
+    ctx.lineTo(point3.x, point3.y), ctx.stroke()
+    ctx.lineTo(point4.x, point4.y), ctx.stroke()
+    ctx.lineTo(point1.x, point1.y), ctx.stroke()
+
+    
+
+    for (let i = 0; i < 100; i++) {
+        var degree = (i / 100) * 360
+        radian = (degree * Math.PI) / 180
+    
+        var sin = Math.sin(radian)
+        var cos = Math.cos(radian)
+        
+        targetX = (cos - sin) * 50 + 100
+        targetY = (sin + cos) * 50 + 100
+    
+        ctx.moveTo(100, 100)
         ctx.lineTo(targetX, targetY)
         ctx.stroke()
     }
+
+    // console.log(cos, sin)
+
 }
 
 
@@ -114,12 +170,12 @@ function hwScaleMatrix(event, trans){
 // 회전 변환 함수
 function hwRotationMatrix(event){
     degree = parseFloat(inputRotate.value)
-    var str = "111";
 
     try {if(event.deltaY < 0) degree += 1; else degree -= 1}
-    catch (error) {CompareRange("Rotate"); UndoSet("Rotate"); console.log("222")}
+    catch (error) {CompareRange("Rotate"); UndoSet("Rotate");}
     finally {CompareRange("Rotate")}
     
+    console.log(degree)
     radian = (degree * Math.PI) / 180
     getSin = Math.sin(radian), getCos = Math.cos(radian)
 
@@ -196,6 +252,7 @@ function UndoSet(type){
             break;
         case "Rotate": 
             //console.log(Confirm), console.log(["Rotate", degree, ''])
+            console.log(degree)
             if(Confirm[0] != "Rotate" || Confirm[1] != degree){
             Undo.push([TransX, TransY, ScaleX, ScaleY, Confirm[1]])
             Confirm = ["Rotate", degree, '']
@@ -308,3 +365,11 @@ function buttonClickEvent(type, trans, PM){
 
 //Sapari는 숫자(e 포함)만 기입되는 'number' 타입의 input에 문자도 기입이 됨.
 //replace 사용하여 숫자만 추출
+
+
+canvas.addEventListener("mousedown", function(event){
+    var mouseX = event.clientX - canvas.getBoundingClientRect().left;
+    var mouseY = event.clientY - canvas.getBoundingClientRect().top;
+
+    console.log(mouseX, mouseY)
+})

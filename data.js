@@ -24,13 +24,11 @@ var sin, cos1, cos2, cos3, cos4 // 하트 모양을 만드는 데 필요한 sin,
 var lenX, lenY                  // 하트를 그릴 각 좌표의 길이
 var targetX, targetY            // 하트 중심으로부터 선을 그릴 위치 지정
 
-
 // 속성 초기 설정
 var ScaleX = 5, ScaleY = 5  // 크기
 var TransX = 0, TransY = 0  // 이동
 var degree = 0, radian = (degree * Math.PI) / 180       // 각도 및 라디안 설정
 var getSin = Math.sin(radian), getCos = Math.cos(radian)// sin, cos 값
-
 
 // 행렬 모음
 let TMatrix = [[1, 0, TransX], [0, 1, TransY],[0, 0, 1]]// 이동 변환 행렬
@@ -42,9 +40,9 @@ let RMatrix = [[getCos, getSin * -1, 0], [getSin, getCos, 0],[0, 0, 1]]//회전 
 let MultyMatrix = []    // 행렬 곱 행렬
 hwMatrixMultiply()      // 행렬 곱 수행
 
-
 // Undo, Redo에 이용할 행렬 모음
 let Undo = []
 let Confirm = ['type', 'X', 'Y']
 let historyNum = -1;
 let undoCheck = false
+

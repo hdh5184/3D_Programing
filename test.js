@@ -105,3 +105,24 @@ function redo(){
     historyNum += 1
     undoCheck = true
 }
+
+degree = this.degree
+var point1 = {
+    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
+    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+
+degree += 90
+var point2 = {
+    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
+    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+
+degree += 90    
+var point3 = {
+    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
+    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+
+degree += 90
+var point4 = {
+    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
+    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+
