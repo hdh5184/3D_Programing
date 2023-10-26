@@ -108,21 +108,56 @@ function redo(){
 
 degree = this.degree
 var point1 = {
-    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
-    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleY) * 16 + coordX,
+    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleX) * 16 + coordY}
 
 degree += 90
 var point2 = {
-    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
-    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleY) * 16 + coordX,
+    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleX) * 16 + coordY}
 
 degree += 90    
 var point3 = {
-    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
-    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleY) * 16 + coordX,
+    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleX) * 16 + coordY}
 
 degree += 90
 var point4 = {
-    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
-    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
+    x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleY) * 16 + coordX,
+    y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleX) * 16 + coordY}
+
+    var point1 = {
+        x : (subCos * -ScaleX + subSin * ScaleY) * 16 + coordX,
+        y : (subSin * ScaleY + subCos * -ScaleX) * 16 + coordY}
+    var point2 = {
+        x : (subCos * ScaleX - subSin * ScaleY) * 16 + coordX,
+        y : (subSin * ScaleY + subCos * ScaleX) * 16 + coordY} 
+    var point3 = {
+        x : (subCos * ScaleX - subSin * -ScaleY) * 16 + coordX,
+        y : (subSin * -ScaleY + subCos * ScaleX) * 16 + coordY}
+    var point4 = {
+        x : (subCos * -ScaleX - subSin * -ScaleY) * 16 + coordX,
+        y : (subSin * -ScaleY + subCos * -ScaleX) * 16 + coordY}
+
+        var point1 = {
+            x : -ScaleX,
+            y : ScaleY}
+        var point2 = {
+            x : ScaleX,
+            y : ScaleY}
+        var point3 = {
+            x : ScaleX,
+            y : -ScaleY}
+        var point4 = {
+            x : -ScaleX,
+            y : -ScaleY}
+    
+        console.log(point1, point2, point3, point4)
+        
+        ctx.strokeStyle = "black", ctx.beginPath()
+        ctx.moveTo(point1.x + coordX, point1.y + coordY), ctx.stroke()
+        ctx.lineTo(point2.x + coordX, point2.y + coordY), ctx.stroke()
+        ctx.lineTo(point3.x + coordX, point3.y + coordY), ctx.stroke()
+        ctx.lineTo(point4.x + coordX, point4.y + coordY), ctx.stroke()
+        ctx.lineTo(point1.x + coordX, point1.y + coordY), ctx.stroke()
 

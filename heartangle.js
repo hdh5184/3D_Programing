@@ -6,6 +6,7 @@
 
 //하트 그리는 함수
 function drawHeart(){
+
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.strokeStyle = "red", ctx.beginPath()
 
@@ -35,28 +36,25 @@ function drawHeart(){
         ctx.stroke()
 
     }
+
+    console.log(ScaleX, ScaleY)
+
     degree = this.degree
+    subSin = Math.sin((degree * Math.PI) / 180), subCos = Math.cos((degree * Math.PI) / 180)
+    console.log(subSin, subCos)
+
     var point1 = {
-        x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
-        y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
-
-    degree += 90
+        x : (subCos * -ScaleX - subSin * ScaleY) * 16 + coordX,
+        y : (subSin * -ScaleX + subCos * ScaleY) * 16 + coordY}
     var point2 = {
-        x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
-        y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
-
-    degree += 90    
+        x : (subCos * ScaleX - subSin * ScaleY) * 16 + coordX,
+        y : (subSin * ScaleX + subCos * ScaleY) * 16 + coordY} 
     var point3 = {
-        x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
-        y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
-
-    degree += 90
+        x : (subCos * ScaleX - subSin * -ScaleY) * 16 + coordX,
+        y : (subSin * ScaleX + subCos * -ScaleY) * 16 + coordY}
     var point4 = {
-        x : (Math.cos((degree * Math.PI) / 180) * ScaleX - Math.sin((degree * Math.PI) / 180) * ScaleX) * 16 + coordX,
-        y : (Math.sin((degree * Math.PI) / 180) * ScaleY + Math.cos((degree * Math.PI) / 180) * ScaleY) * 16 + coordY}
-
-
-    console.log(cos, sin)
+        x : (subCos * -ScaleX - subSin * -ScaleY) * 16 + coordX,
+        y : (subSin * -ScaleX + subCos * -ScaleY) * 16 + coordY}
 
     console.log(point1, point2, point3, point4)
     
@@ -66,6 +64,7 @@ function drawHeart(){
     ctx.lineTo(point3.x, point3.y), ctx.stroke()
     ctx.lineTo(point4.x, point4.y), ctx.stroke()
     ctx.lineTo(point1.x, point1.y), ctx.stroke()
+
 
     
 

@@ -45,4 +45,3 @@ let Undo = []
 let Confirm = ['type', 'X', 'Y']
 let historyNum = -1;
 let undoCheck = false
-
