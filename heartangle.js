@@ -6,7 +6,6 @@
 
 //하트 그리는 함수
 function drawHeart(){
-
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.strokeStyle = "red", ctx.beginPath()
 
@@ -34,7 +33,6 @@ function drawHeart(){
         ctx.moveTo(coordX, coordY)
         ctx.lineTo(targetX, targetY)
         ctx.stroke()
-
     }
 
     heartArea()
@@ -42,39 +40,40 @@ function drawHeart(){
 
 
 function heartArea(){
+
+
     degree = this.degree
     subSin = Math.sin((degree * Math.PI) / 180), subCos = Math.cos((degree * Math.PI) / 180)
     console.log(subSin, subCos)
 
-    var point1 = {
+    let point = []
+    point[0] = {
         x : (subCos * -ScaleX - subSin * ScaleY) * 16 + coordX,
         y : (subSin * -ScaleX + subCos * ScaleY) * 16 + coordY}
-    var point2 = {
+    point[1] = {
         x : (subCos * ScaleX - subSin * ScaleY) * 16 + coordX,
-        y : (subSin * ScaleX + subCos * ScaleY) * 16 + coordY} 
-    var point3 = {
+        y : (subSin * ScaleX + subCos * ScaleY) * 16 + coordY}
+    point[2] = {
         x : (subCos * ScaleX - subSin * -ScaleY) * 16 + coordX,
         y : (subSin * ScaleX + subCos * -ScaleY) * 16 + coordY}
-    var point4 = {
+    point[3] = {
         x : (subCos * -ScaleX - subSin * -ScaleY) * 16 + coordX,
         y : (subSin * -ScaleX + subCos * -ScaleY) * 16 + coordY}
+
+    heartAreaData.x = point[3].x, heartAreaData.y = point[3].y
+    //console.log(point[3], heartAreaData)
     
     ctx.strokeStyle = "gray", ctx.beginPath()
-    ctx.moveTo(point1.x, point1.y), ctx.stroke()
-    ctx.lineTo(point2.x, point2.y), ctx.stroke()
-    ctx.lineTo(point3.x, point3.y), ctx.stroke()
-    ctx.lineTo(point4.x, point4.y), ctx.stroke()
-    ctx.lineTo(point1.x, point1.y), ctx.stroke()
+    ctx.moveTo(point[3].x, point[3].y), ctx.stroke()
+    for (let i = 0; i < point.length; i++) {
+        ctx.lineTo(point[i].x, point[i].y), ctx.stroke()
+    }
 
     ctx.beginPath(), ctx.fillStyle = "white"
-    ctx.arc((point1.x + point2.x) / 2, (point1.y + point2.y) / 2, 5, 0, 2 * Math.PI)
+    for (let i = 0; i < point.length; i++) {
+        ctx.arc((point[i % 4].x + point[(i + 1) % 4].x) / 2, (point[i % 4].y + point[(i + 1) % 4].y) / 2, 5, 0, 2 * Math.PI)
     ctx.stroke(), ctx.fill(), ctx.beginPath()
-    ctx.arc((point2.x + point3.x) / 2, (point2.y + point3.y) / 2, 5, 0, 2 * Math.PI)
-    ctx.stroke(), ctx.fill(), ctx.beginPath()
-    ctx.arc((point3.x + point4.x) / 2, (point3.y + point4.y) / 2, 5, 0, 2 * Math.PI)
-    ctx.stroke(), ctx.fill(), ctx.beginPath()
-    ctx.arc((point4.x + point1.x) / 2, (point4.y + point1.y) / 2, 5, 0, 2 * Math.PI)
-    ctx.stroke(), ctx.fill(), ctx.beginPath()
+    }
 }
 
 
@@ -353,12 +352,44 @@ function buttonClickEvent(type, trans, PM){
 }
 
 //Sapari는 숫자(e 포함)만 기입되는 'number' 타입의 input에 문자도 기입이 됨.
-//replace 사용하여 숫자만 추출
-
 
 canvas.addEventListener("mousedown", function(event){
     var mouseX = event.clientX - canvas.getBoundingClientRect().left;
     var mouseY = event.clientY - canvas.getBoundingClientRect().top;
 
-    console.log(mouseX, mouseY)
+    if (
+        (mouseX >= heartAreaData.x - heartAreaData.resizeHandleRadius &&
+        mouseX <= heartAreaData.x + heartAreaData.resizeHandleRadius) &&
+        (mouseY >= heartAreaData.y - heartAreaData.resizeHandleRadius &&
+        mouseY <= heartAreaData.y + heartAreaData.resizeHandleRadius)
+      ) {
+        heartAreaData.isDragging = true;
+        heartAreaData.clickedResizeHandle = "topLeft";
+      } else {
+        heartAreaData.isDragging = false;
+        heartAreaData.clickedResizeHandle = "";
+      }
+      console.log(heartAreaData.isDragging)
 })
+
+canvas.addEventListener("mousemove", function(event) {
+    if (heartAreaData.isDragging) {
+      var mouseX = event.clientX - canvas.getBoundingClientRect().left;
+      var mouseY = event.clientY - canvas.getBoundingClientRect().top;
+  
+      if (heartAreaData.clickedResizeHandle === "topLeft") {
+        ScaleX = (coordX - mouseX) / 16;
+        ScaleY = (coordY - mouseY) / 16
+        console.log(ScaleX, ScaleY)
+        inputScaleX.value = ScaleX, inputScaleY.value = ScaleY
+      } else {
+        // 하트 이동하기
+      }
+  
+      hwScaleMatrix();
+    }
+  });
+
+canvas.addEventListener("mouseup", function() {
+    heartAreaData.isDragging = false;
+});

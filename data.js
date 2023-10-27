@@ -45,3 +45,14 @@ let Undo = []
 let Confirm = ['type', 'X', 'Y']
 let historyNum = -1;
 let undoCheck = false
+
+var heartAreaData = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    isDragging: false,
+    resizeHandleRadius: 5,
+    resizeHandleDiameter: 2 * 5,
+    clickedResizeHandle: ""
+  };
