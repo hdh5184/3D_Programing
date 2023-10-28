@@ -65,6 +65,10 @@ function undo(){
         default:
             break;
     }
+
+    // TransX = Undo[historyNum][0], TransY = Undo[historyNum][1]
+    // ScaleX = Undo[historyNum][2], ScaleY = Undo[historyNum][3]
+
     historyNum -= 1
     undoCheck = true
     console.log(historyNum)

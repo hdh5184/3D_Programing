@@ -279,7 +279,7 @@ function undo(){
 
     historyNum -= 1
     undoCheck = true
-    console.log(historyNum)
+    console.log(Undo, historyNum)
 }
 
 
@@ -366,16 +366,33 @@ canvas.addEventListener("mousedown", function(event){
             mouseY <= point[i].y + heartAreaData.resizeHandleRadius)
           ) {
             heartAreaData.isDragging = true;
-            heartAreaData.clickedResizeHandle = "topLeft";
+            switch(i){
+                case 0 :
+                    heartAreaData.clickedResizeHandle.x = "Left"
+                    heartAreaData.clickedResizeHandle.y = "Bottom"; break;
+                case 1 :
+                    heartAreaData.clickedResizeHandle.x = "Right"
+                    heartAreaData.clickedResizeHandle.y = "Bottom"; break;
+                case 2 :
+                    heartAreaData.clickedResizeHandle.x = "Right"
+                    heartAreaData.clickedResizeHandle.y = "Top"; break;
+                case 3 :
+                    heartAreaData.clickedResizeHandle.x = "Left"
+                    heartAreaData.clickedResizeHandle.y = "Top"; break;
+            }
+            console.log(heartAreaData.clickedResizeHandle)
             ConfirmInspector("Scale")
+            break
           } else {
             heartAreaData.isDragging = false;
-            heartAreaData.clickedResizeHandle = "";
+            heartAreaData.clickedResizeHandle = {x : "", y : ""};
           }
     }
 
-    
-    console.log(heartAreaData.isDragging)
+    Undo.splice(historyNum + 1, Undo.length - historyNum);
+    Undo.push([TransX, TransY, ScaleX, ScaleY, degree])
+    historyNum++;
+    console.log(historyNum)
 })
 
 canvas.addEventListener("mousemove", function(event) {
@@ -383,24 +400,35 @@ canvas.addEventListener("mousemove", function(event) {
         var mouseX = event.clientX - canvas.getBoundingClientRect().left;
         var mouseY = event.clientY - canvas.getBoundingClientRect().top;
   
-      if (heartAreaData.clickedResizeHandle === "topLeft") {
-        heartAreaData.width = heartAreaData.x + heartAreaData.width - mouseX;
-        heartAreaData.x = mouseX;
-        ScaleX = heartAreaData.width / 2 / 16
-        var subTransX = heartAreaData.width / 2 + heartAreaData.x - coordX
-        // //console.log(heartAreaData.x)
+        if (heartAreaData.clickedResizeHandle.x == "Left") {
+            heartAreaData.width = heartAreaData.x + heartAreaData.width - mouseX;
+            heartAreaData.x = mouseX
+            ScaleX = heartAreaData.width / 2 / 16
+            var subTransX = heartAreaData.width / 2 + heartAreaData.x - coordX
+        }
+        if (heartAreaData.clickedResizeHandle.x == "Right") {
+            heartAreaData.width = canvas.width - (canvas.width - mouseX + heartAreaData.x)
+            heartAreaData.x = mouseX - heartAreaData.width;
+            ScaleX = heartAreaData.width / 2 / 16
+            var subTransX = heartAreaData.width / 2 + heartAreaData.x - coordX
+        }
 
-        heartAreaData.height = heartAreaData.y + heartAreaData.height - mouseY;
-        heartAreaData.y = mouseY
-        ScaleY = heartAreaData.height / 2 / 16
-        var subTransY = heartAreaData.height / 2 + heartAreaData.y - coordY
+        if (heartAreaData.clickedResizeHandle.y == "Top") {
+            heartAreaData.height = heartAreaData.y + heartAreaData.height - mouseY;
+            heartAreaData.y = mouseY
+            ScaleY = heartAreaData.height / 2 / 16
+            var subTransY = heartAreaData.height / 2 + heartAreaData.y - coordY
+        }
+        if (heartAreaData.clickedResizeHandle.y == "Bottom") {
+            heartAreaData.height = canvas.height - (canvas.height - mouseY + heartAreaData.y);
+            heartAreaData.y = mouseY - heartAreaData.height;
+            ScaleY = heartAreaData.height / 2 / 16
+            var subTransY = heartAreaData.height / 2 + heartAreaData.y - coordY
+        }
 
-        
-      } else {
-        // 하트 이동하기
-      }
-      TransX += subTransX, TransY += subTransY
-      TMatrix[0][2] = TransX, TMatrix[1][2] = TransY
+      TransX += subTransX, TransY -= subTransY
+      console.log(subTransX, subTransY)
+      TMatrix[0][2] = TransX, TMatrix[1][2] = -TransY
       SMatrix[0][0] = ScaleX, SMatrix[1][1] = ScaleY
 
       inputTransX.value = TMatrix[0][2], inputTransY.value = TMatrix[1][2]
@@ -414,7 +442,14 @@ canvas.addEventListener("mousemove", function(event) {
 canvas.addEventListener("mouseup", function() {
     heartAreaData.isDragging = false;
 
-    Undo.push([TransX, -TransY, ScaleX, ScaleY, degree])
-    historyNum++;
+    var temp = [TransX, TransY, ScaleX, ScaleY, degree]
+    var compare = false
+    for (let i = 0; i < Undo[historyNum].length; i++) {
+        if(Undo[historyNum][i] == temp[i]) compare = true
+        else {compare = false; break}
+    }
+    if(compare){
+        Undo.pop(), historyNum--
+    }
     console.log(Undo)
 });
