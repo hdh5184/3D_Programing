@@ -481,7 +481,7 @@ canvas.addEventListener("mousemove", function(event) {
             hwMatrixMultiply()
             
             inputRotate.value = (preDegree - 270 < 0) ? preDegree + 90 : preDegree - 270
-            //degree = (preDegree - 270 < 0) ? preDegree + 90 : preDegree - 270
+            degree = (preDegree - 270 < 0) ? preDegree + 90 : preDegree - 270
         }
         drawHeart()
         console.log(degree)
