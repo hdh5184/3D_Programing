@@ -60,6 +60,7 @@ canvas.addEventListener("mousemove", function(event) {
       rect.height = rect.y + rect.height - mouseY;
       rect.x = mouseX;
       rect.y = mouseY;
+      console.log(rect.width + rect.x)
     } else {
       rect.x = mouseX - rect.dragOffsetX;
       rect.y = mouseY - rect.dragOffsetY;

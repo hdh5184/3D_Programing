@@ -44,9 +44,8 @@ function heartArea(){
 
     degree = this.degree
     subSin = Math.sin((degree * Math.PI) / 180), subCos = Math.cos((degree * Math.PI) / 180)
-    console.log(subSin, subCos)
+    //console.log(subSin, subCos)
 
-    let point = []
     point[0] = {
         x : (subCos * -ScaleX - subSin * ScaleY) * 16 + coordX,
         y : (subSin * -ScaleX + subCos * ScaleY) * 16 + coordY}
@@ -71,7 +70,7 @@ function heartArea(){
 
     ctx.beginPath(), ctx.fillStyle = "white"
     for (let i = 0; i < point.length; i++) {
-        ctx.arc((point[i % 4].x + point[(i + 1) % 4].x) / 2, (point[i % 4].y + point[(i + 1) % 4].y) / 2, 5, 0, 2 * Math.PI)
+        ctx.arc(point[i].x, point[i].y, 5, 0, 2 * Math.PI)
     ctx.stroke(), ctx.fill(), ctx.beginPath()
     }
 }
@@ -317,16 +316,17 @@ function redo(){
 function mouseWheelEvent(event, trans, type){
     switch (type) {
         case 'Trans':
-            if(trans == 'X') if(event.deltaY < 0) TransX += 1; else TransX -= 1
-            if(trans == 'Y') if(event.deltaY < 0) TransY += 1; else TransY -= 1
+            if(trans == 'X') if(event.deltaY < 0) TransX = parseInt(TransX += 1); else TransX = parseInt(TransX -= 1)
+            if(trans == 'Y') if(event.deltaY < 0) TransY = parseInt(TransY += 1); else TransY = parseInt(TransY -= 1)
             break;
         case "Scale":
-            if(trans == 'X') if(event.deltaY < 0) ScaleX += 1; else ScaleX -= 1
-            if(trans == 'Y') if(event.deltaY < 0) ScaleY += 1; else ScaleY -= 1
+            if(trans == 'X') if(event.deltaY < 0) ScaleX = parseInt(ScaleX += 1); else ScaleX = parseInt(ScaleX -= 1)
+            if(trans == 'Y') if(event.deltaY < 0) ScaleY = parseInt(ScaleY += 1); else ScaleY = parseInt(ScaleY -= 1)
             break;
         default:
             break;
     }
+    console.log(ScaleX)
 }
 
 
@@ -357,39 +357,64 @@ canvas.addEventListener("mousedown", function(event){
     var mouseX = event.clientX - canvas.getBoundingClientRect().left;
     var mouseY = event.clientY - canvas.getBoundingClientRect().top;
 
-    if (
-        (mouseX >= heartAreaData.x - heartAreaData.resizeHandleRadius &&
-        mouseX <= heartAreaData.x + heartAreaData.resizeHandleRadius) &&
-        (mouseY >= heartAreaData.y - heartAreaData.resizeHandleRadius &&
-        mouseY <= heartAreaData.y + heartAreaData.resizeHandleRadius)
-      ) {
-        heartAreaData.isDragging = true;
-        heartAreaData.clickedResizeHandle = "topLeft";
-      } else {
-        heartAreaData.isDragging = false;
-        heartAreaData.clickedResizeHandle = "";
-      }
-      console.log(heartAreaData.isDragging)
+    for (let i = 0; i < point.length; i++) {
+        console.log(point[i])
+        if (
+            (mouseX >= point[i].x - heartAreaData.resizeHandleRadius &&
+            mouseX <= point[i].x + heartAreaData.resizeHandleRadius) &&
+            (mouseY >= point[i].y - heartAreaData.resizeHandleRadius &&
+            mouseY <= point[i].y + heartAreaData.resizeHandleRadius)
+          ) {
+            heartAreaData.isDragging = true;
+            heartAreaData.clickedResizeHandle = "topLeft";
+            ConfirmInspector("Scale")
+          } else {
+            heartAreaData.isDragging = false;
+            heartAreaData.clickedResizeHandle = "";
+          }
+    }
+
+    
+    console.log(heartAreaData.isDragging)
 })
 
 canvas.addEventListener("mousemove", function(event) {
     if (heartAreaData.isDragging) {
-      var mouseX = event.clientX - canvas.getBoundingClientRect().left;
-      var mouseY = event.clientY - canvas.getBoundingClientRect().top;
+        var mouseX = event.clientX - canvas.getBoundingClientRect().left;
+        var mouseY = event.clientY - canvas.getBoundingClientRect().top;
   
       if (heartAreaData.clickedResizeHandle === "topLeft") {
-        ScaleX = (coordX - mouseX) / 16;
-        ScaleY = (coordY - mouseY) / 16
-        console.log(ScaleX, ScaleY)
-        inputScaleX.value = ScaleX, inputScaleY.value = ScaleY
+        heartAreaData.width = heartAreaData.x + heartAreaData.width - mouseX;
+        heartAreaData.x = mouseX;
+        ScaleX = heartAreaData.width / 2 / 16
+        var subTransX = heartAreaData.width / 2 + heartAreaData.x - coordX
+        // //console.log(heartAreaData.x)
+
+        heartAreaData.height = heartAreaData.y + heartAreaData.height - mouseY;
+        heartAreaData.y = mouseY
+        ScaleY = heartAreaData.height / 2 / 16
+        var subTransY = heartAreaData.height / 2 + heartAreaData.y - coordY
+
+        
       } else {
         // 하트 이동하기
       }
-  
-      hwScaleMatrix();
+      TransX += subTransX, TransY += subTransY
+      TMatrix[0][2] = TransX, TMatrix[1][2] = TransY
+      SMatrix[0][0] = ScaleX, SMatrix[1][1] = ScaleY
+
+      inputTransX.value = TMatrix[0][2], inputTransY.value = TMatrix[1][2]
+      inputScaleX.value = SMatrix[0][0], inputScaleY.value = SMatrix[1][1]
+
+      hwMatrixMultiply()
+      drawHeart()
     }
   });
 
 canvas.addEventListener("mouseup", function() {
     heartAreaData.isDragging = false;
+
+    Undo.push([TransX, -TransY, ScaleX, ScaleY, degree])
+    historyNum++;
+    console.log(Undo)
 });

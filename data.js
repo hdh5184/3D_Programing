@@ -41,18 +41,20 @@ let MultyMatrix = []    // 행렬 곱 행렬
 hwMatrixMultiply()      // 행렬 곱 수행
 
 // Undo, Redo에 이용할 행렬 모음
-let Undo = []
+let Undo = [[0, 0, 5, 5, 0]]
 let Confirm = ['type', 'X', 'Y']
 let historyNum = -1;
 let undoCheck = false
 
 var heartAreaData = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
+    x: 220, // 0,
+    y: 220, // 0,
+    width: 160, //ScaleX * 16 * 2,
+    height: 160, //ScaleY * 16 * 2,
     isDragging: false,
     resizeHandleRadius: 5,
     resizeHandleDiameter: 2 * 5,
     clickedResizeHandle: ""
   };
+
+let point = []
