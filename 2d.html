@@ -37,6 +37,7 @@ canvas.addEventListener("mousedown", function(event) {
     rect.isDragging = true;
     rect.clickedResizeHandle = "topLeft";
   } else {
+    console.log("s")
     rect.isDragging = false;
     rect.clickedResizeHandle = "";
   }
@@ -54,6 +55,7 @@ canvas.addEventListener("mousemove", function(event) {
   if (rect.isDragging) {
     var mouseX = event.clientX - canvas.getBoundingClientRect().left;
     var mouseY = event.clientY - canvas.getBoundingClientRect().top;
+    console.log(rect.isDragging)
 
     if (rect.clickedResizeHandle === "topLeft") {
       rect.width = rect.x + rect.width - mouseX;

@@ -54,7 +54,9 @@ var heartAreaData = {
     isDragging: false,
     resizeHandleRadius: 5,
     resizeHandleDiameter: 2 * 5,
-    clickedResizeHandle: {x: "", y: ""}
+    clickedResizeHandle: {x: "", y: ""},
+    dragOffsetX: 0,
+    dragOffsetY: 0
   };
 
 let point = []

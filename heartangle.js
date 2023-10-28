@@ -60,7 +60,10 @@ function heartArea(){
         y : (subSin * -ScaleX + subCos * -ScaleY) * 16 + coordY}
 
     heartAreaData.x = point[3].x, heartAreaData.y = point[3].y
+    heartAreaData.width = ScaleX * 16 * 2
+    heartAreaData.height = ScaleY * 16 * 2
     //console.log(point[3], heartAreaData)
+    console.log(heartAreaData)
     
     ctx.strokeStyle = "gray", ctx.beginPath()
     ctx.moveTo(point[3].x, point[3].y), ctx.stroke()
@@ -280,6 +283,7 @@ function undo(){
     historyNum -= 1
     undoCheck = true
     console.log(Undo, historyNum)
+    console.log(heartAreaData)
 }
 
 
@@ -389,6 +393,13 @@ canvas.addEventListener("mousedown", function(event){
           }
     }
 
+    if (mouseX >= heartAreaData.x && mouseX <= heartAreaData.x + heartAreaData.width &&
+        mouseY >= heartAreaData.y && mouseY <= heartAreaData.y + heartAreaData.height) {
+        heartAreaData.isDragging = true;
+        heartAreaData.dragOffsetX = mouseX - heartAreaData.x;
+        heartAreaData.dragOffsetY = mouseY - heartAreaData.y;
+    }
+
     Undo.splice(historyNum + 1, Undo.length - historyNum);
     Undo.push([TransX, TransY, ScaleX, ScaleY, degree])
     historyNum++;
@@ -403,31 +414,33 @@ canvas.addEventListener("mousemove", function(event) {
         if (heartAreaData.clickedResizeHandle.x == "Left") {
             heartAreaData.width = heartAreaData.x + heartAreaData.width - mouseX;
             heartAreaData.x = mouseX
-            ScaleX = heartAreaData.width / 2 / 16
-            var subTransX = heartAreaData.width / 2 + heartAreaData.x - coordX
         }
-        if (heartAreaData.clickedResizeHandle.x == "Right") {
+        else if (heartAreaData.clickedResizeHandle.x == "Right") {
             heartAreaData.width = canvas.width - (canvas.width - mouseX + heartAreaData.x)
             heartAreaData.x = mouseX - heartAreaData.width;
-            ScaleX = heartAreaData.width / 2 / 16
-            var subTransX = heartAreaData.width / 2 + heartAreaData.x - coordX
         }
+        else{
+            heartAreaData.x = mouseX - heartAreaData.dragOffsetX;
+        }
+        ScaleX = heartAreaData.width / 2 / 16
+        var subTransX = heartAreaData.width / 2 + heartAreaData.x - coordX
 
         if (heartAreaData.clickedResizeHandle.y == "Top") {
             heartAreaData.height = heartAreaData.y + heartAreaData.height - mouseY;
             heartAreaData.y = mouseY
-            ScaleY = heartAreaData.height / 2 / 16
-            var subTransY = heartAreaData.height / 2 + heartAreaData.y - coordY
         }
-        if (heartAreaData.clickedResizeHandle.y == "Bottom") {
+        else if (heartAreaData.clickedResizeHandle.y == "Bottom") {
             heartAreaData.height = canvas.height - (canvas.height - mouseY + heartAreaData.y);
             heartAreaData.y = mouseY - heartAreaData.height;
-            ScaleY = heartAreaData.height / 2 / 16
-            var subTransY = heartAreaData.height / 2 + heartAreaData.y - coordY
         }
+        else{
+            heartAreaData.y = mouseY - heartAreaData.dragOffsetY;
+        }
+        ScaleY = heartAreaData.height / 2 / 16
+        var subTransY = heartAreaData.height / 2 + heartAreaData.y - coordY
 
       TransX += subTransX, TransY -= subTransY
-      console.log(subTransX, subTransY)
+      console.log(heartAreaData.x, heartAreaData.y)
       TMatrix[0][2] = TransX, TMatrix[1][2] = -TransY
       SMatrix[0][0] = ScaleX, SMatrix[1][1] = ScaleY
 
@@ -451,5 +464,6 @@ canvas.addEventListener("mouseup", function() {
     if(compare){
         Undo.pop(), historyNum--
     }
-    console.log(Undo)
+    //console.log(Undo)
+    console.log(heartAreaData)
 });
