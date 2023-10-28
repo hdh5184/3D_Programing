@@ -6,16 +6,15 @@
 
 //하트 그리는 함수
 function drawHeart(){
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.strokeStyle = "red", ctx.beginPath()
 
     coordX = canvas.width / 2 + MultyMatrix[0][2]
     coordY = canvas.height / 2 + MultyMatrix[1][2]
-    
-    var localX1 = coordX, localX2 = coordX, localY1 = coordY, localY2 = coordY
 
     for (i = 0; i < count; i++) {
-        var deg = (i / count) * 360
+        var deg = (i / count) * 360 
         radian = (deg * Math.PI) / 180
     
         sin = Math.sin(radian)
@@ -40,11 +39,8 @@ function drawHeart(){
 
 
 function heartArea(){
-
-
     degree = this.degree
     subSin = Math.sin((degree * Math.PI) / 180), subCos = Math.cos((degree * Math.PI) / 180)
-    //console.log(subSin, subCos)
 
     point[0] = {
         x : (subCos * -ScaleX - subSin * ScaleY) * 16 + coordX,
@@ -59,23 +55,29 @@ function heartArea(){
         x : (subCos * -ScaleX - subSin * -ScaleY) * 16 + coordX,
         y : (subSin * -ScaleX + subCos * -ScaleY) * 16 + coordY}
 
+    point[4] = {
+        x : (subSin * ScaleY) * 24 + coordX,
+        y : (subCos * ScaleY) * -24 + coordY}
+
     heartAreaData.x = point[3].x, heartAreaData.y = point[3].y
     heartAreaData.width = ScaleX * 16 * 2
     heartAreaData.height = ScaleY * 16 * 2
-    //console.log(point[3], heartAreaData)
-    console.log(heartAreaData)
     
     ctx.strokeStyle = "gray", ctx.beginPath()
     ctx.moveTo(point[3].x, point[3].y), ctx.stroke()
-    for (let i = 0; i < point.length; i++) {
+    for (let i = 0; i < 4; i++) {
         ctx.lineTo(point[i].x, point[i].y), ctx.stroke()
     }
+    ctx.moveTo(coordX, coordY)
+    ctx.lineTo(point[4].x, point[4].y), ctx.stroke()
 
     ctx.beginPath(), ctx.fillStyle = "white"
-    for (let i = 0; i < point.length; i++) {
+    for (let i = 0; i < 5; i++) {
         ctx.arc(point[i].x, point[i].y, 5, 0, 2 * Math.PI)
     ctx.stroke(), ctx.fill(), ctx.beginPath()
     }
+
+    //console.log(point)
 }
 
 
@@ -204,6 +206,7 @@ function CompareRange(c){
 }
 
 
+// Undo Inspector 기록 중복 방지
 function ConfirmInspector(type){
     switch (type) {
         case "Trans":
@@ -217,9 +220,11 @@ function ConfirmInspector(type){
             break;
         default: break;
     }
-    console.log(Confirm)
+    //console.log(Confirm)
 }
 
+
+// Undo Inspector를 기록
 function UndoSet(type){
     if(undoCheck) Undo.splice(historyNum + 1, Undo.length - historyNum); undoCheck = false
 
@@ -255,6 +260,8 @@ function UndoSet(type){
     console.log(Undo)
 }
 
+
+// 기록된 Undo 내역에 따라 이전 작업 실행
 function undo(){
     if(historyNum == Undo.length - 1)
     Undo.push([TransX, TransY, ScaleX, ScaleY, degree])
@@ -287,6 +294,7 @@ function undo(){
 }
 
 
+// 기록된 Undo 내역에 따라 다음 작업 실행
 function redo(){
     console.log(historyNum[0])
     console.log(Undo[historyNum+2])
@@ -314,6 +322,7 @@ function redo(){
 }
 
 //----------------------------이벤트 모음----------------------------//
+//Sapari는 숫자(e 포함)만 기입되는 'number' 타입의 input에 문자도 기입이 됨.
 
 
 // 마우스 휠 작동 방향에 따른 input 값 보완하는 함수
@@ -334,6 +343,7 @@ function mouseWheelEvent(event, trans, type){
 }
 
 
+// Inspector 수치 증가 및 감소 버튼 이용 시
 function buttonClickEvent(type, trans, PM){
     switch (type) {
         case "Trans":
@@ -355,14 +365,13 @@ function buttonClickEvent(type, trans, PM){
     }
 }
 
-//Sapari는 숫자(e 포함)만 기입되는 'number' 타입의 input에 문자도 기입이 됨.
 
+// canvas 내 마우스 조작 시 - 누름
 canvas.addEventListener("mousedown", function(event){
     var mouseX = event.clientX - canvas.getBoundingClientRect().left;
     var mouseY = event.clientY - canvas.getBoundingClientRect().top;
 
-    for (let i = 0; i < point.length; i++) {
-        console.log(point[i])
+    for (let i = 0; i < 5; i++) {
         if (
             (mouseX >= point[i].x - heartAreaData.resizeHandleRadius &&
             mouseX <= point[i].x + heartAreaData.resizeHandleRadius) &&
@@ -383,6 +392,9 @@ canvas.addEventListener("mousedown", function(event){
                 case 3 :
                     heartAreaData.clickedResizeHandle.x = "Left"
                     heartAreaData.clickedResizeHandle.y = "Top"; break;
+                case 4 : 
+                    heartAreaData.clickedResizeHandle.x = "Rotate"
+                    heartAreaData.clickedResizeHandle.y = "Rotate"
             }
             console.log(heartAreaData.clickedResizeHandle)
             ConfirmInspector("Scale")
@@ -403,9 +415,11 @@ canvas.addEventListener("mousedown", function(event){
     Undo.splice(historyNum + 1, Undo.length - historyNum);
     Undo.push([TransX, TransY, ScaleX, ScaleY, degree])
     historyNum++;
-    console.log(historyNum)
+    console.log(heartAreaData)
 })
 
+
+// canvas 내 마우스 조작 시 - 누르면서 움직임
 canvas.addEventListener("mousemove", function(event) {
     if (heartAreaData.isDragging) {
         var mouseX = event.clientX - canvas.getBoundingClientRect().left;
@@ -418,6 +432,9 @@ canvas.addEventListener("mousemove", function(event) {
         else if (heartAreaData.clickedResizeHandle.x == "Right") {
             heartAreaData.width = canvas.width - (canvas.width - mouseX + heartAreaData.x)
             heartAreaData.x = mouseX - heartAreaData.width;
+        }
+        else if(heartAreaData.clickedResizeHandle.x == "Rotate"){
+            var dx = mouseX - coordX
         }
         else{
             heartAreaData.x = mouseX - heartAreaData.dragOffsetX;
@@ -433,25 +450,48 @@ canvas.addEventListener("mousemove", function(event) {
             heartAreaData.height = canvas.height - (canvas.height - mouseY + heartAreaData.y);
             heartAreaData.y = mouseY - heartAreaData.height;
         }
+        else if(heartAreaData.clickedResizeHandle.y == "Rotate"){
+            var dy = coordY - mouseY
+        }
         else{
             heartAreaData.y = mouseY - heartAreaData.dragOffsetY;
         }
         ScaleY = heartAreaData.height / 2 / 16
         var subTransY = heartAreaData.height / 2 + heartAreaData.y - coordY
 
-      TransX += subTransX, TransY -= subTransY
-      console.log(heartAreaData.x, heartAreaData.y)
-      TMatrix[0][2] = TransX, TMatrix[1][2] = -TransY
-      SMatrix[0][0] = ScaleX, SMatrix[1][1] = ScaleY
+        TransX += subTransX, TransY -= subTransY
+        TMatrix[0][2] = TransX, TMatrix[1][2] = -TransY
+        SMatrix[0][0] = ScaleX, SMatrix[1][1] = ScaleY
 
-      inputTransX.value = TMatrix[0][2], inputTransY.value = TMatrix[1][2]
-      inputScaleX.value = SMatrix[0][0], inputScaleY.value = SMatrix[1][1]
+        inputTransX.value = TMatrix[0][2], inputTransY.value = TMatrix[1][2]
+        inputScaleX.value = SMatrix[0][0], inputScaleY.value = SMatrix[1][1]
 
-      hwMatrixMultiply()
-      drawHeart()
+        hwMatrixMultiply()
+
+        if(heartAreaData.clickedResizeHandle.y == "Rotate"){
+            var Radians = Math.atan2(dy, dx)
+            var preDegree = (360 - ((Radians * 180 / Math.PI + 360) % 360)) % 360
+            
+            radian = (parseFloat(inputRotate.value) * Math.PI) / 180
+            getSin = Math.sin(radian), getCos = Math.cos(radian)
+            
+            RMatrix[0][0] = getCos, RMatrix[0][1] = getSin * -1
+            RMatrix[1][0] = getSin, RMatrix[1][1] = getCos
+            
+            hwMatrixMultiply()
+            
+            inputRotate.value = (preDegree - 270 < 0) ? preDegree + 90 : preDegree - 270
+            //degree = (preDegree - 270 < 0) ? preDegree + 90 : preDegree - 270
+        }
+        drawHeart()
+        console.log(degree)
     }
+
+    
   });
 
+
+// canvas 내 마우스 조작 시 - 손을 뗌
 canvas.addEventListener("mouseup", function() {
     heartAreaData.isDragging = false;
 
@@ -465,5 +505,5 @@ canvas.addEventListener("mouseup", function() {
         Undo.pop(), historyNum--
     }
     //console.log(Undo)
-    console.log(heartAreaData)
+    //console.log(heartAreaData)
 });

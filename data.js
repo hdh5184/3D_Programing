@@ -40,23 +40,25 @@ let RMatrix = [[getCos, getSin * -1, 0], [getSin, getCos, 0],[0, 0, 1]]//회전 
 let MultyMatrix = []    // 행렬 곱 행렬
 hwMatrixMultiply()      // 행렬 곱 수행
 
-// Undo, Redo에 이용할 행렬 모음
+// Undo, Redo에 이용할 Inspector 기록 모음
 let Undo = []
-let Confirm = ['type', 'X', 'Y']
-let historyNum = -1;
-let undoCheck = false
+let Confirm = []      // Undo Inspector 기록 중복 방지용
+let historyNum = -1;  // Undo 및 Redo를 수행할 인덱스
+let undoCheck = false // Undo를 실행하고 새로운 Inspector 기록하는 데 필요한 조건
+                      // true : Undo 미실행됨 / false : Undo 실행 됨 
 
+// 하트 영역의 데이터 모음
 var heartAreaData = {
-    x: 220, // 0,
-    y: 220, // 0,
-    width: 160, //ScaleX * 16 * 2,
-    height: 160, //ScaleY * 16 * 2,
-    isDragging: false,
-    resizeHandleRadius: 5,
-    resizeHandleDiameter: 2 * 5,
-    clickedResizeHandle: {x: "", y: ""},
-    dragOffsetX: 0,
-    dragOffsetY: 0
+    x: 220,
+    y: 220,
+    width: 160,                         // ScaleX * 16 * 2,
+    height: 160,                        // ScaleY * 16 * 2,
+    isDragging: false,                  // 드래그 감지
+    resizeHandleRadius: 5,              // 확대 및 축소 버튼 영역 - 원의 반지름
+    clickedResizeHandle: {x: '', y: ''},// x, y축의 버튼 영역 방향 저장
+    dragOffsetX: 0,                     // x축으로 드래그 시 적용할 이동 오프셋
+    dragOffsetY: 0                      // y축으로 드래그 시 적용할 이동 오프셋
   };
 
+// 하트 영역의 확대 및 축소 버튼의 위치 - 4개
 let point = []
